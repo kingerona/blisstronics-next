@@ -1,16 +1,33 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useContext } from 'react';
 import Layout from '../../components/Layout';
 import data from '../../utils/data';
+import { Store } from '../../utils/Store';
 
 const ProductScreen = () => {
+  const { state, dispatch } = useContext(Store);
+
   const { query } = useRouter();
   const { slug } = query;
   const product = data.products.find((product) => product.slug === slug);
-
   if (!product) return <div>Product not Found!</div>;
+
+  const addToCartHandler = () => {
+    const existItem = state.cart.cartItems.find(
+      (item) => item.slug === product.slug
+    );
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+
+    if (product.stockAmount < quantity) {
+      alert('Sorry, you have reached the maximum stock amount');
+      return;
+    }
+
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    console.log('button working');
+  };
 
   return (
     <Layout title={product.name}>
@@ -51,7 +68,12 @@ const ProductScreen = () => {
               <div>Status</div>
               <div>{product.stockAmount > 0 ? 'In stock' : 'Out of stock'}</div>
             </div>
-            <button className="primary-button w-full">Add to Cart</button>
+            <button
+              className="primary-button w-full"
+              onClick={addToCartHandler}
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
       </div>
