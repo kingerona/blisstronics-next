@@ -8,7 +8,7 @@ import { Store } from '../../utils/Store';
 
 const ProductScreen = () => {
   const { state, dispatch } = useContext(Store);
-
+  const router = useRouter();
   const { query } = useRouter();
   const { slug } = query;
   const product = data.products.find((product) => product.slug === slug);
@@ -25,8 +25,12 @@ const ProductScreen = () => {
       return;
     }
 
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
-    console.log('button working');
+    dispatch({
+      type: 'CART_ADD_ITEM',
+      payload: { ...product, price: product.price * quantity, quantity },
+    });
+
+    router.push('/cart');
   };
 
   return (
