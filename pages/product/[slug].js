@@ -27,7 +27,7 @@ const ProductScreen = () => {
 
     dispatch({
       type: 'CART_ADD_ITEM',
-      payload: { ...product, price: product.price * quantity, quantity },
+      payload: { ...product, quantity },
     });
 
     router.push('/cart');
