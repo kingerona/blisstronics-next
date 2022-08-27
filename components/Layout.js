@@ -1,9 +1,13 @@
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Store } from '../utils/Store';
 
 const Layout = ({ title, children }) => {
+  const { status, data: session } = useSession();
+
   const { state } = useContext(Store);
   const { cart } = state;
 
@@ -19,6 +23,8 @@ const Layout = ({ title, children }) => {
         <meta name="description" content="Blisstronics e-commerce website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Toaster />
 
       <div className="flex min-h-screen flex-col justify-between">
         <header>
@@ -37,9 +43,16 @@ const Layout = ({ title, children }) => {
                   )}
                 </a>
               </Link>
-              <Link href="/login">
-                <a className=" px-2">Login</a>
-              </Link>
+
+              {status === 'loading' ? (
+                'Loading'
+              ) : session?.user ? (
+                session.user.name
+              ) : (
+                <Link href="/login">
+                  <a className="p-2">Login</a>
+                </Link>
+              )}
             </div>
           </nav>
         </header>
