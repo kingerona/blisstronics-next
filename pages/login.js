@@ -40,7 +40,7 @@ const LoginScreen = () => {
           )}
         </div>
         <div className="mb-4">
-          <lable htmlFor="password">Password</lable>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             {...register('password', {
