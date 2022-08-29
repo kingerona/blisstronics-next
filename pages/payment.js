@@ -25,12 +25,12 @@ const PaymentScreen = () => {
       JSON.stringify({ ...cart, paymentMethod: selectedPaymentMethod })
     );
 
-    router.push('/placeorder');
+    return router.push('/placeorder');
   };
 
   useEffect(() => {
     if (!shippingAddress.address) {
-      return router.push('/shipping');
+      router.push('/shipping');
     }
     setSelectedPaymentMethod(paymentMethod || '');
   }, [paymentMethod, router, shippingAddress.address]);
@@ -71,3 +71,4 @@ const PaymentScreen = () => {
 };
 
 export default PaymentScreen;
+PaymentScreen.auth = true;
