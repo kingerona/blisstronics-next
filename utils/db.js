@@ -35,5 +35,25 @@ const disconnect = async () => {
   }
 };
 
-const db = { connect, disconnect };
+const convertDocToObject = (doc) => {
+  doc._id = doc._id.toString();
+  doc.createdAt = doc.createdAt.toString();
+  doc.updatedAt = doc.updatedAt.toString();
+  doc.saleStarts = doc.saleStarts.toString();
+  doc.saleEnds = doc.saleEnds.toString();
+
+  return doc;
+};
+
+const convertVariationToObject = (doc) => {
+  doc._id = doc._id.toString();
+  return doc;
+};
+
+const db = {
+  connect,
+  disconnect,
+  convertDocToObject,
+  convertVariationToObject,
+};
 export default db;

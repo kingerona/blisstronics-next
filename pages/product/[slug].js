@@ -1,28 +1,29 @@
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
 import Layout from '../../components/Layout';
-import data from '../../utils/data';
+import Product from '../../models/Product';
+import db from '../../utils/db';
 import { Store } from '../../utils/Store';
 
-const ProductScreen = () => {
+const ProductScreen = ({ product }) => {
+  console.log(product._id);
   const { state, dispatch } = useContext(Store);
-  const router = useRouter();
-  const { query } = useRouter();
-  const { slug } = query;
-  const product = data.products.find((product) => product.slug === slug);
-  if (!product) return <div>Product not Found!</div>;
 
-  const addToCartHandler = () => {
+  if (!product)
+    return <Layout title="Product not found">Product not Found!</Layout>;
+
+  const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find(
       (item) => item.slug === product.slug
     );
     const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
 
-    if (product.stockAmount < quantity) {
-      alert('Sorry, you have reached the maximum stock amount');
-      return;
+    if (data.stockAmount < quantity) {
+      return toast.error('Sorry, stock amount reached');
     }
 
     dispatch({
@@ -30,7 +31,7 @@ const ProductScreen = () => {
       payload: { ...product, quantity },
     });
 
-    router.push('/cart');
+    toast.success('Item added to cart');
   };
 
   return (
@@ -86,3 +87,38 @@ const ProductScreen = () => {
 };
 
 export default ProductScreen;
+
+export const getStaticPaths = async () => {
+  return {
+    paths: [
+      { params: { slug: 'product-1' } },
+      { params: { slug: 'product-2' } },
+      { params: { slug: 'product-3' } },
+      { params: { slug: 'product-4' } },
+      { params: { slug: 'product-5' } },
+      { params: { slug: 'product-6' } },
+      { params: { slug: 'product-7' } },
+      { params: { slug: 'product-8' } },
+    ],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps = async (context) => {
+  const { params } = context;
+  const { slug } = params;
+
+  await db.connect();
+  const product = await Product.findOne({ slug }).lean();
+  const stringified = product && db.convertDocToObject(product);
+  const variations =
+    stringified && stringified.variations?.map(db.convertVariationToObject);
+  await db.disconnect();
+
+  return {
+    props: {
+      product: product ? { ...stringified, variations } : null,
+    },
+    revalidate: 10,
+  };
+};
