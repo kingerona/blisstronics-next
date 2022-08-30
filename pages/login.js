@@ -36,6 +36,7 @@ const LoginScreen = () => {
       }
     } catch (err) {
       toast.error(getError(err));
+      console.log(err);
     }
   };
 

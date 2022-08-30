@@ -21,7 +21,7 @@ const Layout = ({ title, children }) => {
 
   const logoutClickHandler = () => {
     Cookies.remove('cart');
-    dispatch({ type: 'CART_RESET', payload: session.user.email });
+    dispatch({ type: 'CART_RESET' });
     signOut({ callbackUrl: '/login' });
   };
 
