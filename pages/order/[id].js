@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
+import toast from 'react-hot-toast';
 import Layout from '../../components/Layout';
 import { getError } from '../../utils/error';
 
@@ -49,6 +50,7 @@ const OrderScreen = () => {
   }, [order._id, orderId]);
 
   const {
+    _id,
     shippingAddress,
     paymentMethod,
     orderItems,
@@ -58,9 +60,27 @@ const OrderScreen = () => {
     totalPrice,
     isPaid,
     paidAt,
+    paymentStatus,
     isDelivered,
     deliveredAt,
   } = order;
+
+  const router = useRouter();
+  // const [processing, setProcessing] = useState(false);
+
+  const handleOrder = async () => {
+    // setProcessing(true);
+
+    const { data } = await axios.post('/api/ssl/init', {
+      orderId: _id,
+    });
+
+    if (data.error) {
+      return toast.error(data.error);
+    }
+
+    router.push(data.GatewayPageURL);
+  };
 
   return (
     <Layout title={`Order - ${orderId}`}>
@@ -90,7 +110,9 @@ const OrderScreen = () => {
               <h2 className="mb-2 text-lg">Payment Method</h2>
               <div>{paymentMethod}</div>
               {isPaid ? (
-                <div className="alert-success">Paid at {paidAt}</div>
+                <div className="alert-success">
+                  Paid at {paidAt} -- (Status: {paymentStatus})
+                </div>
               ) : (
                 <div className="alert-error">Not paid</div>
               )}
@@ -163,6 +185,16 @@ const OrderScreen = () => {
                     <div>৳ {totalPrice}</div>
                   </div>
                 </li>
+                {!isPaid && (
+                  <li>
+                    <button
+                      className="primary-button w-full"
+                      onClick={handleOrder}
+                    >
+                      Pay the amount
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
