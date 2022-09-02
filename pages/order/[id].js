@@ -111,7 +111,8 @@ const OrderScreen = () => {
               <div>{paymentMethod}</div>
               {isPaid ? (
                 <div className="alert-success">
-                  Paid at {paidAt} -- (Status: {paymentStatus})
+                  Paid at {paidAt.substring(0, 10)} {paidAt.substring(11, 19)}{' '}
+                  -- (Status: {paymentStatus})
                 </div>
               ) : (
                 <div className="alert-error">Not paid</div>

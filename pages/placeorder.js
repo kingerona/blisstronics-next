@@ -176,5 +176,5 @@ const PlaceOrderScreen = () => {
   );
 };
 
-export default PlaceOrderScreen;
 PlaceOrderScreen.auth = true;
+export default PlaceOrderScreen;

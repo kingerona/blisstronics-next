@@ -7,7 +7,7 @@ import Product from '../models/Product';
 import db from '../utils/db';
 import { Store } from '../utils/Store';
 
-export default function Home({ products }) {
+const Home = ({ products }) => {
   const { state, dispatch } = useContext(Store);
 
   const addToCartHandler = async (product) => {
@@ -42,7 +42,9 @@ export default function Home({ products }) {
       </div>
     </Layout>
   );
-}
+};
+
+export default Home;
 
 export const getStaticProps = async () => {
   await db.connect();

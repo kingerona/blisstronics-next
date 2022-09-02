@@ -30,10 +30,9 @@ const handler = async (req, res) => {
   }
 
   await db.connect();
-  const orderDate = new Date();
   await Order.findByIdAndUpdate(response.tran_id, {
     isPaid: true,
-    paidAt: orderDate.toLocaleString(),
+    paidAt: Date.now(),
     paymentStatus: response.risk_level === 1 ? 'On hold' : 'Paid',
   });
   await db.disconnect();
