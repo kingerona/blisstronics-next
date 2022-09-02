@@ -33,7 +33,7 @@ const handler = async (req, res) => {
   await Order.findByIdAndUpdate(response.tran_id, {
     isPaid: true,
     paidAt: Date.now(),
-    paymentStatus: response.risk_level === 1 ? 'On hold' : 'Paid',
+    paymentStatus: response.risk_level === '1' ? 'On hold' : 'Paid',
   });
   await db.disconnect();
   res.send({ message: 'Order paid successfully' });

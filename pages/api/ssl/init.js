@@ -33,9 +33,9 @@ const handler = async (req, res) => {
     total_amount: totalPrice,
     currency: 'BDT',
     tran_id: orderId, // use unique tran_id for each api call
-    success_url: `${process.env.ROOT_URL}/order/${orderId}`,
-    fail_url: `${process.env.ROOT_URL}/api/ssl/fail`,
-    cancel_url: `${process.env.ROOT_URL}/placeorder`,
+    success_url: `${process.env.ROOT_URL}/api/ssl/success`,
+    fail_url: `${process.env.ROOT_URL}/order/${orderId}`,
+    cancel_url: `${process.env.ROOT_URL}/order/${orderId}`,
     ipn_url: `${process.env.ROOT_URL}/api/ssl/ipn`,
     shipping_method: 'Courier',
     product_name: 'Computer and accessories',
